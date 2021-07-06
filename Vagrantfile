@@ -41,11 +41,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Script to prepare the VM
     node.vm.provision "setup-dns", type: "shell", :path => "ubuntu/update-dns.sh"
     node.vm.provision "install-docker", type: "shell", :path => "ubuntu/install-docker.sh"
+    node.vm.provision "install-minikube", :type => "shell", :path => "ubuntu/install-minikube.sh" do |install_minikube|
+      install_minikube.args = [KUBERNETES_VERSION]
+    end
+    
     node.vm.provision "allow-bridge-nf-traffic", :type => "shell", :path => "ubuntu/allow-bridge-nf-traffic.sh"
 
     node.vm.provision "install-minikube", :type => "shell", :path => "ubuntu/install-minikube.sh" do |install_minikube|
       install_minikube.args = [KUBERNETES_VERSION]
     end
-  
+
+    node.vm.provision "start-minikube", :type => "shell", :path => "ubuntu/start-minikube.sh", privileged: false do |install_minikube|
+      install_minikube.args = [KUBERNETES_VERSION]
+    end
+
   end
 end
