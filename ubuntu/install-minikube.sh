@@ -32,36 +32,22 @@ mkdir -p $HOME/.minikube
 mkdir -p $HOME/.kube
 touch $HOME/.kube/config
 
-export KUBECONFIG=$HOME/.kube/config
-
 # Permissions
+sudo chown -R $USER:$USER $HOME/.kube/config
 sudo chown -R $USER:$USER $HOME/.kube
 sudo chown -R $USER:$USER $HOME/.minikube
 
+export KUBECONFIG=$HOME/.kube/config
 export MINIKUBE_WANTUPDATENOTIFICATION=false
 export MINIKUBE_WANTREPORTERRORPROMPT=false
 export MINIKUBE_HOME=$HOME
-export CHANGE_MINIKUBE_NONE_USER=true
+export CHANGE_MINIKUBE_NONE_USER=false
 export KUBECONFIG=$HOME/.kube/config
-
-# Disable SWAP since is not supported on a kubernetes cluster
-sudo swapoff -a
-
-## Start minikube
-sudo minikube start --kubernetes-version v$1 --driver=none
-
-## Addons
-sudo minikube addons enable ingress
-
-## Configure vagrant clients dir
 
 printf "export MINIKUBE_WANTUPDATENOTIFICATION=false\n" >> /home/vagrant/.bashrc
 printf "export MINIKUBE_WANTREPORTERRORPROMPT=false\n" >> /home/vagrant/.bashrc
 printf "export MINIKUBE_HOME=/home/vagrant\n" >> /home/vagrant/.bashrc
-printf "export CHANGE_MINIKUBE_NONE_USER=true\n" >> /home/vagrant/.bashrc
+printf "export CHANGE_MINIKUBE_NONE_USER=false\n" >> /home/vagrant/.bashrc
 printf "export KUBECONFIG=/home/vagrant/.kube/config\n" >> /home/vagrant/.bashrc
 printf "source <(kubectl completion bash)\n" >> /home/vagrant/.bashrc
-
-# Permissions
-sudo chown -R $USER:$USER $HOME/.kube
-sudo chown -R $USER:$USER $HOME/.minikube
+printf "source <(minikube completion bash)\n" >> /home/vagrant/.bashrc
